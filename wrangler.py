@@ -41,7 +41,7 @@ class CurriculumWrangler:
             else:
                 self.response[key]["Duration"] = 30
 
-            if self.curriculum["Prerequisite Codes"][i] != type(3.45):
+            if type(self.curriculum["Prerequisite Codes"][i]) != type(3.45):
                 self.response[key]["Prerequisite Codes"] = self.curriculum[
                     "Prerequisite Codes"
                 ][i].split(";")
