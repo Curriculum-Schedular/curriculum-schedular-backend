@@ -2,6 +2,7 @@ import requests
 
 url = "http://localhost:8000/api/v1/upload-curriculum"
 file = open("curriculum_with_prerequisites.csv", "rb")
+# file = open(".gitignore", "rb")
 
 response = requests.post(url, data={"name": "Curriculum"}, files={"file": file})
 

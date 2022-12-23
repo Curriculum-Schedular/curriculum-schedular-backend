@@ -57,13 +57,6 @@ def get_taken_courses(user_id: str):
 
 @app.post("/api/v1/upload-curriculum")
 def upload_file(file: UploadFile = File(...)):
-    # df = pd.read_csv(file.file)
     wrangler = CurriculumWrangler(file)
     wrangler.load_curriculum()
-    print(file.filename)
     return wrangler.transform_curriculum()
-
-    # file.file.close()
-    # file_input = file.file.read()
-    # file_input.save("local.xlsx")
-    # return {"filename": file.filename}
