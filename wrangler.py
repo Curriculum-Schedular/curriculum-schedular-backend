@@ -8,7 +8,7 @@ from fastapi import UploadFile, File
 class CurriculumWrangler:
 
     # Constructor which initializes the path to the temporarily
-    # storaged curriculum.
+    # stored curriculum.
     def __init__(self, file: UploadFile = File(...)):
         self.FILE = file.file
         self.curriculum = None
@@ -18,19 +18,22 @@ class CurriculumWrangler:
     # converting it into a dictionary.
     def load_curriculum(self):
         try:
+            #print(self.FILE.read())
             self.curriculum = pd.read_csv(self.FILE)
             self.curriculum = self.curriculum.to_dict()
-        except pd.errors.ParseError:
+        except pd.errors.ParserError:
             self.response = {
                 "IsError" : True,
                 "Error" : "FileTypeMismatch",
                 "Message" : "Pandas can only accept tabular data."
             } 
-            return self.response
 
     # Function which transforms the curriculum into a API response
     # which relevant data if formatting requirements are met.
     def transform_curriculum(self):
+        if self.curriculum == None:
+            return self.response
+
         try:
             for i in self.curriculum["Course Code"]:
                 key = self.curriculum["Course Code"][i]
@@ -55,6 +58,12 @@ class CurriculumWrangler:
                     ][i].split(";")
                 else:
                     self.response[key]["Prerequisite Codes"] = []
+            
+            self.response = {
+                "IsError": False,
+                "Curriculum":self.response
+            }
+
         except KeyError as k:
             print(self.response)
 
