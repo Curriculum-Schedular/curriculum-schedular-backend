@@ -17,8 +17,16 @@ class CurriculumWrangler:
     # Function which loads the temporarily stored curriculum and
     # converting it into a dictionary.
     def load_curriculum(self):
-        self.curriculum = pd.read_csv(self.FILE)
-        self.curriculum = self.curriculum.to_dict()
+        try:
+            self.curriculum = pd.read_csv(self.FILE)
+            self.curriculum = self.curriculum.to_dict()
+        except pd.errors.ParseError:
+            self.response = {
+                "IsError" : True,
+                "Error" : "FileTypeMismatch",
+                "Message" : "Pandas can only accept tabular data."
+            } 
+            return self.response
 
     # Function which transforms the curriculum into a API response
     # which relevant data if formatting requirements are met.
@@ -51,8 +59,9 @@ class CurriculumWrangler:
             print(self.response)
 
             self.response = {
+                "IsError" : True,
                 "Error": "CurriculumSchemaMismatchError",
-                "CurriculumSchemaMismatchError": "The curriculum schema does not follow the formatting requirements",
+                "Message": "The curriculum schema does not follow the formatting requirements",
             }
 
         return self.response
